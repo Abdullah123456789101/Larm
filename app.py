@@ -5,61 +5,39 @@ import sqlite3
 
 app = Flask(__name__)
 
+def query_db(query, args=()):
+    conn = sqlite3.connect('larm.db')
+    conn.row_factory = sqlite3.Row  # rows behave like dicts
+    cursor = conn.cursor()
+
+    cursor.execute(query, args)
+    rows = cursor.fetchall()
+
+    conn.close()
+    return [dict(row) for row in rows]
 
 
 @app.route('/data', methods=['GET'])
 def get_data():
-    conn = sqlite3.connect('larm.db')
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM data")
-    data = cursor.fetchall()
-
-    items = []
-    for datapoint in data:
-        items.append({
-            "tid": datapoint[0],
-            "db": datapoint[1],
-            "lokale": datapoint[2],
-            "lokation": datapoint[3],
-            "sensor_id": datapoint[4]
-        })
-
-    cursor.close()
-    conn.close()
-
-    return jsonify(items)
+    return jsonify(query_db("SELECT * FROM data"))
 
 @app.route('/data/<int:start>-<int:end>', methods=['GET'])
 def get_data_date(start, end):
-    conn = sqlite3.connect('larm.db')
-    cursor = conn.cursor()
+    return jsonify(query_db("SELECT * FROM data WHERE tid BETWEEN ? AND ?", (start, end)))
 
-    cursor.execute("SELECT * FROM data WHERE tid >= ? AND tid <= ?", (start, end))
-    data = cursor.fetchall()
+@app.route('/lokale/<lokale>', methods=['GET'])
+def get_lokale(lokale):
+    return jsonify(query_db("SELECT * FROM data WHERE lokale = ?", (lokale,)))
 
-    items = []
-    for datapoint in data:
-        items.append({
-            "tid": datapoint[0],
-            "db": datapoint[1],
-            "lokale": datapoint[2],
-            "lokation": datapoint[3],
-            "sensor_id": datapoint[4]
-        })
-
-    cursor.close()
-    conn.close()
-
-    return jsonify(items)
+@app.route('/lokale/<lokale>/<int:start>-<int:end>', methods=['GET'])
+def get_lokale_date(lokale, start, end):
+    return jsonify(query_db("SELECT * FROM data WHERE lokale = ? AND tid BETWEEN ? AND ?", (lokale, start, end)))
 
 
 # get sensor data
 @app.route('/sensor/<int:sensor_id>/<int:start>-<int:end>', methods=['GET'])
-def get_sensor_data(sensor_id, start, end):
+def get_sensor(sensor_id, start, end):
     return jsonify([sensor_id, start, end])
-
-
 
 
 
