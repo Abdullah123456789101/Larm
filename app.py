@@ -33,11 +33,55 @@ def get_lokale(lokale):
 def get_lokale_date(lokale, start, end):
     return jsonify(query_db("SELECT * FROM data WHERE lokale = ? AND tid BETWEEN ? AND ?", (lokale, start, end)))
 
+@app.route('/sensor_info/<int:sensor_id>', methods=['GET'])
+def get_sensor_info(sensor_id):
+    return jsonify(query_db("SELECT * FROM sensor WHERE id = ?", (sensor_id, )))
 
-# get sensor data
+# get sensor data ABDULLAH
 @app.route('/sensor/<int:sensor_id>/<int:start>-<int:end>', methods=['GET'])
 def get_sensor(sensor_id, start, end):
     return jsonify([sensor_id, start, end])
+
+# teste uploading af data:
+# Invoke-RestMethod -Uri "http://127.0.0.1:8080/add" -Method Post ` -ContentType "application/json" ` -Body '{ "db": 90, "sensor_id": 67 }'
+@app.route('/add', methods=['POST'])
+def add_data():
+    data = request.get_json()
+    db = data['db']
+    sensor_id = data['sensor_id']
+
+    conn = sqlite3.connect('larm.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT lokale, lokation FROM sensor WHERE id = ?", (sensor_id, ))
+    lokale, lokation = cursor.fetchone()
+
+    cursor.execute("INSERT INTO data (tid, db, lokale, lokation, sensor_id) VALUES (unixepoch(), ?, ?, ?, ?)",
+                   (db, lokale, lokation, sensor_id))
+    conn.commit()
+
+    conn.close()
+
+    return jsonify({'message': 'Data added successfully'})
+
+# Invoke-RestMethod -Uri "http://127.0.0.1:8080/update_sensor" -Method Put ` -ContentType "application/json" ` -Body '{ "sensor_id": 67, "lokale": "2221", "lokation": "doer" }'
+@app.route('/update_sensor', methods=['PUT'])
+def update_sensor():
+    data = request.get_json()
+
+    sensor_id = data['sensor_id']
+    lokale = data['lokale']
+    lokation = data['lokation']
+
+    conn = sqlite3.connect('larm.db')
+    cursor = conn.cursor()
+
+    cursor.execute('UPDATE sensor SET lokale = ?, lokation = ? WHERE id = ?', (lokale, lokation, sensor_id))
+    conn.commit()
+
+    conn.close()
+    return jsonify({'message': 'Sensor updated successfully'})
+
 
 
 
