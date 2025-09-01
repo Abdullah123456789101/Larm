@@ -8,7 +8,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-connect = sqlite3.connect('database.db')
+connect = sqlite3.connect('Web app with flask and SQLite/database.db')
 connect.execute(
     'CREATE TABLE IF NOT EXISTS PARTICIPANTS (name TEXT, \
     email TEXT, city TEXT, country TEXT, phone TEXT)')
@@ -21,7 +21,7 @@ def join():
         city = request.form['city']
         country = request.form['country']
         phone = request.form['phone']
-        with sqlite3.connect("database.db") as users:
+        with sqlite3.connect("Web app with flask and SQLite/database.db") as users:
             cursor = users.cursor()
             cursor.execute("INSERT INTO PARTICIPANTS \
             (name,email,city,country,phone) VALUES (?,?,?,?,?)",
@@ -33,7 +33,7 @@ def join():
 
 @app.route('/participants')
 def participants():
-    connect = sqlite3.connect('database.db')
+    connect = sqlite3.connect('Web app with flask and SQLite/database.db')
     cursor = connect.cursor()
     cursor.execute('SELECT * FROM PARTICIPANTS')
 

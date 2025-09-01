@@ -20,17 +20,14 @@ import sqlite3
 
 
 
-
-
 ## Create the Flask application
 app = Flask(__name__)
-
 
 ## Endpoint to retrieve all users
 @app.route('/users', methods=['GET'])
 def get_users():
     ## Connect to the database
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect('Rest API/example.db')
     cursor = conn.cursor()
 
     ## Execute the SQL query to retrieve all users
@@ -49,7 +46,7 @@ def get_users():
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     ## Connect to the database
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect('Rest API/example.db')
     cursor = conn.cursor()
 
     ## Execute the SQL query to retrieve the user by ID
@@ -76,7 +73,7 @@ def create_user():
     email = data['email']
 
     ## Connect to the database
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect('Rest API/example.db')
     cursor = conn.cursor()
 
     ## Execute the SQL query to insert a new user
@@ -100,7 +97,7 @@ def update_user(user_id):
     email = data['email']
 
     ## Connect to the database
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect('Rest API/example.db')
     cursor = conn.cursor()
 
     ## Execute the SQL query to update the user
@@ -119,7 +116,7 @@ def update_user(user_id):
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     ## Connect to the database
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect('Rest API/example.db')
     cursor = conn.cursor()
 
     ## Execute the SQL query to delete the user
