@@ -1,8 +1,6 @@
 from flask import Flask, jsonify, request
 import sqlite3
 
-
-
 app = Flask(__name__)
 
 def query_db(query, args=()):
@@ -37,10 +35,14 @@ def get_lokale_date(lokale, start, end):
 def get_sensor_info(sensor_id):
     return jsonify(query_db("SELECT * FROM sensor WHERE id = ?", (sensor_id, )))
 
-# get sensor data ABDULLAH
+@app.route('/sensor/<int:sensor_id>', methods=['GET'])
+def get_sensor(sensor_id):
+    return jsonify(query_db("SELECT * FROM data WHERE sensor_id = ?", (sensor_id, )))
+
+
 @app.route('/sensor/<int:sensor_id>/<int:start>-<int:end>', methods=['GET'])
-def get_sensor(sensor_id, start, end):
-    return jsonify([sensor_id, start, end])
+def get_sensor_date(sensor_id, start, end):
+    return jsonify(query_db("SELECT * FROM data WHERE sensor_id = ? AND tid BETWEEN ? AND ?", (sensor_id, start, end)))
 
 # teste uploading af data:
 # Invoke-RestMethod -Uri "http://127.0.0.1:8080/add" -Method Post ` -ContentType "application/json" ` -Body '{ "db": 90, "sensor_id": 67 }'
