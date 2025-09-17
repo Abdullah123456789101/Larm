@@ -7,7 +7,6 @@ from helpers import *
 app = Flask(__name__)
 
 
-
 @app.route('/', methods=['GET'])
 def root():
     return render_template("index.html")
@@ -15,8 +14,8 @@ def root():
 @app.route('/data', methods=['GET'])
 def get_data():
     query = query_db("SELECT * FROM data")
-
-    return jsonify(query)
+    graf_html = make_graf(query, "tid", "db", "lokale")
+    return graf_html
 
 @app.route('/data/<int:start>-<int:end>', methods=['GET'])
 def get_data_date(start, end):
