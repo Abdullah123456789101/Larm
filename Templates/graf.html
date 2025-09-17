@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        #plot-container {
+            height: 75vh;    /* full viewport height */
+            width: 75vw;     /* full viewport width */
+        }
+        #plot-container > div {
+            height: 100% !important; /* make the Plotly <div> fill its parent */
+            width: 100% !important;
+        }
+    </style>
 </head>
-    <body>
-        {{ graf }}
-    </body>
+<body>
+    <h1 style="display: flex; justify-content: center;">GRAF</h1>
+
+    <div style="display: flex; justify-content: center;">
+        <button onclick="window.location.href='/'">Gå tilbage</button>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <div id="plot-container">
+            {{ graf|safe }}
+        </div>
+    </div>
+</body>
 </html>

@@ -1,6 +1,7 @@
 import sqlite3
 
 import plotly.graph_objects as go
+from plotly.io import to_html
 import pandas as pd
 
 from datetime import datetime, timezone
@@ -24,18 +25,21 @@ def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
     fig = go.Figure()
     df = pd.DataFrame(query)
 
-    df["tid"] = df["tid"].map(lambda timestamp : datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z'))
+    # ændre så at tid går fra timestamps til en rigtig dato
+    df["tid"] = df["tid"].map(lambda timestamp: datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z'))
 
     columns = list(df.columns)
-    for items in [x, y, groupKey]:
-        columns.remove(items)
+    # fjerner kolonner som ikke skal være i ekstra info når man holder musen over et datapunkt
+    for i in [x, y, groupKey]:
+        columns.remove(i)
 
-    groupData = df.groupby(groupKey)
-    valueNames = set(df.get(groupKey))
+    groupData = df.groupby(groupKey) #gruppere data efter givet key
+    valueNames = set(df.get(groupKey)) # henter alle unikke værdier så der kan lave traces til hver
 
     for valueName in valueNames:
         values = groupData.get_group(valueName)
 
+        # Laver teksten som står der når man putter mus over et datapunkt
         item_texts = []
         for i in range(len(values)):
             items = []
@@ -45,6 +49,7 @@ def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
             text = " | ".join(items)
             item_texts.append(text)
 
+        # Laver en række punkter som er knyttet sammen med en linje
         fig.add_trace(go.Scatter(
             x=values.get(x),
             y=values.get(y),
@@ -53,6 +58,17 @@ def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
             hoverinfo="x+y+text",
             text=item_texts,
         ))
-    return fig.to_html()
 
-#[f"Lokation: {lokation}, Sensor id: {sensor_id}" for (lokation, sensor_id) in zip(values.get("lokation"), values.get("sensor_id"))]
+    fig.update_layout(
+        autosize=True,
+        margin = dict(l=20, r=20, t=40, b=20)
+    )
+
+    return to_html(
+        fig,
+        full_html=False,
+        include_plotlyjs='cdn',
+        default_height='100%',  # key: make div height 100%
+        default_width='100%',  # key: make div width 100%)
+        config = {'responsive': True}
+    )
