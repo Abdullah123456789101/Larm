@@ -1,23 +1,22 @@
-from flask import Flask, jsonify, request
+from flask import Flask, render_template, jsonify, request
 import sqlite3
+
+from helpers import *
+
 
 app = Flask(__name__)
 
-def query_db(query, args=()):
-    conn = sqlite3.connect('larm.db')
-    conn.row_factory = sqlite3.Row  # rows behave like dicts
-    cursor = conn.cursor()
 
-    cursor.execute(query, args)
-    rows = cursor.fetchall()
 
-    conn.close()
-    return [dict(row) for row in rows]
-
+@app.route('/', methods=['GET'])
+def root():
+    return render_template("index.html")
 
 @app.route('/data', methods=['GET'])
 def get_data():
-    return jsonify(query_db("SELECT * FROM data"))
+    query = query_db("SELECT * FROM data")
+
+    return jsonify(query)
 
 @app.route('/data/<int:start>-<int:end>', methods=['GET'])
 def get_data_date(start, end):
@@ -38,7 +37,6 @@ def get_sensor_info(sensor_id):
 @app.route('/sensor/<int:sensor_id>', methods=['GET'])
 def get_sensor(sensor_id):
     return jsonify(query_db("SELECT * FROM data WHERE sensor_id = ?", (sensor_id, )))
-
 
 @app.route('/sensor/<int:sensor_id>/<int:start>-<int:end>', methods=['GET'])
 def get_sensor_date(sensor_id, start, end):
@@ -61,11 +59,11 @@ def add_data():
     cursor.execute("INSERT INTO data (tid, db, lokale, lokation, sensor_id) VALUES (unixepoch(), ?, ?, ?, ?)",
                    (db, lokale, lokation, sensor_id))
     conn.commit()
-
     conn.close()
 
     return jsonify({'message': 'Data added successfully'})
 
+# teste opdatere sensor
 # Invoke-RestMethod -Uri "http://127.0.0.1:8080/update_sensor" -Method Put ` -ContentType "application/json" ` -Body '{ "sensor_id": 67, "lokale": "2221", "lokation": "doer" }'
 @app.route('/update_sensor', methods=['PUT'])
 def update_sensor():
@@ -75,6 +73,9 @@ def update_sensor():
     lokale = data['lokale']
     lokation = data['lokation']
 
+    if not (sensor_id or lokale or lokation):
+        return jsonify({'message': 'sensor_id, lokale or lokation is null'}), 400
+
     conn = sqlite3.connect('larm.db')
     cursor = conn.cursor()
 
@@ -83,8 +84,6 @@ def update_sensor():
 
     conn.close()
     return jsonify({'message': 'Sensor updated successfully'})
-
-
 
 
 if __name__ == '__main__':
