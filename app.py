@@ -6,7 +6,6 @@ from helpers import *
 
 app = Flask(__name__)
 
-
 @app.route('/', methods=['GET'])
 def root():
     return render_template("index.html")
@@ -19,27 +18,37 @@ def get_data():
 
 @app.route('/data/<int:start>-<int:end>', methods=['GET'])
 def get_data_date(start, end):
-    return jsonify(query_db("SELECT * FROM data WHERE tid BETWEEN ? AND ?", (start, end)))
+    query = query_db("SELECT * FROM data WHERE tid BETWEEN ? AND ?", (start, end))
+    graf_html = make_graf(query, "tid", "db", "lokale")
+    return render_template("graf.html", graf=graf_html)
 
 @app.route('/lokale/<lokale>', methods=['GET'])
 def get_lokale(lokale):
-    return jsonify(query_db("SELECT * FROM data WHERE lokale = ?", (lokale,)))
+    query = query_db("SELECT * FROM data WHERE lokale = ?", (lokale,))
+    graf_html = make_graf(query, "tid", "db", "sensor_id")
+    return render_template("graf.html", graf=graf_html)
 
 @app.route('/lokale/<lokale>/<int:start>-<int:end>', methods=['GET'])
 def get_lokale_date(lokale, start, end):
-    return jsonify(query_db("SELECT * FROM data WHERE lokale = ? AND tid BETWEEN ? AND ?", (lokale, start, end)))
+    query = query_db("SELECT * FROM data WHERE lokale = ? AND tid BETWEEN ? AND ?", (lokale, start, end))
+    graf_html = make_graf(query, "tid", "db", "sensor_id")
+    return render_template("graf.html", graf=graf_html)
+
+@app.route('/sensor/<int:sensor_id>', methods=['GET'])
+def get_sensor(sensor_id):
+    query = query_db("SELECT * FROM data WHERE sensor_id = ?", (sensor_id, ))
+    graf_html = make_graf(query, "tid", "db", "lokale")
+    return render_template("graf.html", graf=graf_html)
+
+@app.route('/sensor/<int:sensor_id>/<int:start>-<int:end>', methods=['GET'])
+def get_sensor_date(sensor_id, start, end):
+    query = query_db("SELECT * FROM data WHERE sensor_id = ? AND tid BETWEEN ? AND ?", (sensor_id, start, end))
+    graf_html = make_graf(query, "tid", "db", "lokale")
+    return render_template("graf.html", graf=graf_html)
 
 @app.route('/sensor_info/<int:sensor_id>', methods=['GET'])
 def get_sensor_info(sensor_id):
     return jsonify(query_db("SELECT * FROM sensor WHERE id = ?", (sensor_id, )))
-
-@app.route('/sensor/<int:sensor_id>', methods=['GET'])
-def get_sensor(sensor_id):
-    return jsonify(query_db("SELECT * FROM data WHERE sensor_id = ?", (sensor_id, )))
-
-@app.route('/sensor/<int:sensor_id>/<int:start>-<int:end>', methods=['GET'])
-def get_sensor_date(sensor_id, start, end):
-    return jsonify(query_db("SELECT * FROM data WHERE sensor_id = ? AND tid BETWEEN ? AND ?", (sensor_id, start, end)))
 
 # teste uploading af data:
 # Invoke-RestMethod -Uri "http://127.0.0.1:8080/add" -Method Post ` -ContentType "application/json" ` -Body '{ "db": 90, "sensor_id": 67 }'
