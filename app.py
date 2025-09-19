@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 import sqlite3
 
 from helpers import *
@@ -8,8 +8,18 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def root():
-    return render_template("index.html")
+    return render_template("inex.html")
 
+@app.route("/submit", methods = ["GET"])
+def scoobydoo():
+    lokale = request.args.get("lokale")
+    sensor = request.args.get("sensor")
+
+    if sensor:  # hvis bruger skrev sensor-id
+        return redirect(url_for("get_sensor", sensor_id=sensor))
+
+    elif lokale:  # hvis bruger skrev lokale
+        return redirect(url_for("get_lokale", lokale=lokale))
 @app.route('/data', methods=['GET'])
 def get_data():
     query = query_db("SELECT * FROM data")
@@ -95,4 +105,4 @@ def update_sensor():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=5000)
