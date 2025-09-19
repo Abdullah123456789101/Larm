@@ -8,18 +8,40 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def root():
-    return render_template("inex.html")
+    return render_template("index.html")
 
 @app.route("/submit", methods = ["GET"])
 def scoobydoo():
     lokale = request.args.get("lokale")
     sensor = request.args.get("sensor")
+    all_data = request.args.get("all")
+    start = request.args.get("start")
+    end = request.args.get("end")
 
-    if sensor:  # hvis bruger skrev sensor-id
-        return redirect(url_for("get_sensor", sensor_id=sensor))
+    # Konverter dato fra yyyy-mm-dd til unix timestamp, hvis start og end er sat
+    start_ts = int(datetime.strptime(start, "%Y-%m-%d").timestamp()) if start else None
+    end_ts = int(datetime.strptime(end, "%Y-%m-%d").timestamp()) if end else None
 
-    elif lokale:  # hvis bruger skrev lokale
-        return redirect(url_for("get_lokale", lokale=lokale))
+    if sensor:
+        if start_ts and end_ts:
+            return redirect(url_for("get_sensor_date", sensor_id=sensor, start=start_ts, end=end_ts))
+        else:
+            return redirect(url_for("get_sensor", sensor_id=sensor))
+
+    elif lokale:
+        if start_ts and end_ts:
+            return redirect(url_for("get_lokale_date", lokale=lokale, start=start_ts, end=end_ts))
+        else:
+            return redirect(url_for("get_lokale", lokale=lokale))
+
+    elif all_data:
+        if start_ts and end_ts:
+            return redirect(url_for("get_data_date", start=start_ts, end=end_ts))
+        else:
+            return redirect(url_for("get_data"))
+
+    # fallback
+    return redirect(url_for("root"))
 @app.route('/data', methods=['GET'])
 def get_data():
     query = query_db("SELECT * FROM data")
