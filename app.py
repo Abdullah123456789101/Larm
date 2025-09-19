@@ -6,17 +6,19 @@ from helpers import *
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def root():
-    return render_template("index.html")
+    if request.method == 'GET':
+        print("GET")
+        return render_template("index.html")
+    print("POST")
 
-@app.route("/submit", methods = ["GET"])
-def scoobydoo():
-    lokale = request.args.get("lokale")
-    sensor = request.args.get("sensor")
-    all_data = request.args.get("all")
-    start = request.args.get("start")
-    end = request.args.get("end")
+    lokale = request.form.get("lokale")
+    sensor = request.form.get("sensor")
+    all_data = request.form.get("all")
+    start = request.form.get("start")
+    end = request.form.get("end")
+
 
     # Konverter dato fra yyyy-mm-dd til unix timestamp, hvis start og end er sat
     start_ts = int(datetime.strptime(start, "%Y-%m-%d").timestamp()) if start else None
@@ -42,6 +44,8 @@ def scoobydoo():
 
     # fallback
     return redirect(url_for("root"))
+
+
 @app.route('/data', methods=['GET'])
 def get_data():
     query = query_db("SELECT * FROM data")
