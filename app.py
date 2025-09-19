@@ -15,7 +15,7 @@ def root():
 def get_data():
     query = query_db("SELECT * FROM data")
     graf_html = make_graf(query, "tid", "db", "lokale")
-    return graf_html
+    return render_template("graf.html", graf=graf_html)
 
 @app.route('/data/<int:start>-<int:end>', methods=['GET'])
 def get_data_date(start, end):
