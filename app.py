@@ -1,24 +1,23 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 import sqlite3
 
-from helpers import *
+from datetime import datetime
+
+from helpers import query_db, make_graf
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="Templates")
 
 @app.route('/', methods=['GET', 'POST'])
 def root():
     if request.method == 'GET':
-        print("GET")
         return render_template("index.html")
-    print("POST")
 
     lokale = request.form.get("lokale")
     sensor = request.form.get("sensor")
     all_data = request.form.get("all")
     start = request.form.get("start")
     end = request.form.get("end")
-
 
     # Konverter dato fra yyyy-mm-dd til unix timestamp, hvis start og end er sat
     start_ts = int(datetime.strptime(start, "%Y-%m-%d").timestamp()) if start else None
