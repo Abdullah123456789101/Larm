@@ -99,15 +99,17 @@ def add_data():
     cursor.execute("SELECT lokale, lokation FROM sensor WHERE id = ?", (sensor_id, ))
     lokale, lokation = cursor.fetchone()
 
-    cursor.execute("INSERT INTO data (tid, db, lokale, lokation, sensor_id) VALUES (unixepoch(), ?, ?, ?, ?)",
-                   (db, lokale, lokation, sensor_id))
+    tid = int(datetime.now().timestamp())
+
+    cursor.execute("INSERT INTO data (tid, db, lokale, lokation, sensor_id) VALUES (?, ?, ?, ?, ?)",
+                   (tid, db, lokale, lokation, sensor_id))
     conn.commit()
     conn.close()
 
     return jsonify({'message': 'Data added successfully'})
 
 # teste opdatere sensor
-# Invoke-RestMethod -Uri "http://127.0.0.1:8080/update_sensor" -Method Put ` -ContentType "application/json" ` -Body '{ "sensor_id": 67, "lokale": "2221", "lokation": "doer" }'
+# Invoke-RestMethod -Uri "http://127.0.0.1:8080/update_sensor" -Method Put ` -ContentType "application/json" ` -Body '{ "sensor_id": 67, "lokale": "2221", "lokation": "vindue" }'
 @app.route('/update_sensor', methods=['PUT'])
 def update_sensor():
     data = request.get_json()
