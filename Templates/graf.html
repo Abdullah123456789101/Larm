@@ -1,30 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        #plot-container {
-            height: 75vh;    /* full viewport height */
-            width: 75vw;     /* full viewport width */
-        }
-        #plot-container > div {
-            height: 100% !important; /* make the Plotly <div> fill its parent */
-            width: 100% !important;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>GRAF</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Squircle container til grafen */
+    .squircle-container {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      width: 80vw;
+      max-width: 1000px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .squircle-container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    #plot-container {
+      height: 95vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #plot-container > div {
+      height: 100% !important;
+      width: 100% !important;
+    }
+
+    button {
+      background: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      margin-bottom: 1rem;
+    }
+
+    button:hover {
+      background: #005fa3;
+    }
+  </style>
 </head>
 <body>
-    <h1 style="display: flex; justify-content: center;">GRAF</h1>
+  <h1>GRAF</h1>
 
-    <div style="display: flex; justify-content: center;">
-        <button onclick="window.location.href='/'">Gå tilbage</button>
-    </div>
+  <div class="squircle-container">
+    <button onclick="window.location.href='/'">Gå tilbage</button>
 
-    <div style="display: flex; justify-content: center;">
-        <div id="plot-container">
-            {{ graf|safe }}
-        </div>
+    <div id="plot-container">
+      {{ graf|safe }}
     </div>
+  </div>
 </body>
 </html>

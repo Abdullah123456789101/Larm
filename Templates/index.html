@@ -1,163 +1,120 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-    <meta charset="UTF-8">
-    <title>Søg i larm.db</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            background-color: #fafafa;
-        }
+  <meta charset="UTF-8">
+  <title>Søg i larm.db</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      padding: 2rem;
+    }
 
-        .container {
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
+    h1 {
+      font-size: 2rem;
+      color: #333;
+    }
 
-        h1 {
-            margin-bottom: 30px;
-        }
+    form {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-radius: 28px; /* squircle-effekt */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      width: 320px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-        fieldset {
-            border: 2px solid black;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
-            text-align: left;
-        }
+    form:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
 
-        legend {
-            font-weight: bold;
-            padding: 0 10px;
-        }
+    label {
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
 
-        label {
-            display: inline-block;
-            width: 100px;
-            margin-bottom: 8px;
-        }
+    input[type="number"],
+    input[type="date"] {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
 
-        input {
-            margin-bottom: 8px;
-        }
+    input[type="number"]:focus,
+    input[type="date"]:focus {
+      border-color: #0078d7;
+    }
 
-        .submit-btn {
-            margin-top: 10px;
-            padding: 6px 12px;
-            border: 1px solid black;
-            background: #f0f0f0;
-            cursor: pointer;
-            border-radius: 4px;
-        }
+    input[type="submit"] {
+      margin-top: 1rem;
+      background: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 0.7rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
 
-        .submit-btn:hover {
-            background: #ddd;
-        }
-
-        .ranking-box {
-            border: 2px solid black;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 30px;
-            text-align: left;
-        }
-
-        .ranking-box h2 {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-    </style>
+    input[type="submit"]:hover {
+      background: #005fa3;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Søg data</h1>
+  <h1>Søg data</h1>
 
-<<<<<<< HEAD
-        <!-- Formular til sensor -->
-        <form action="/submit" method="get">
-            <fieldset>
-                <legend>Sensor data</legend>
-                <label for="sensor">Sensor ID:</label>
-                <input type="number" id="sensor" name="sensor"><br>
-=======
-    <!-- Formular til sensor -->
-    <form action="/" method="post">
-        <label for="sensor">Sensor ID:</label>
-        <input type="number" id="sensor" name="sensor">
->>>>>>> origin/main
+  <!-- Formular til sensor -->
+  <form action="/" method="post">
+    <label for="sensor">Sensor ID:</label>
+    <input type="number" id="sensor" name="sensor">
 
-                <label for="start_sensor">Start tid:</label>
-                <input type="date" id="start_sensor" name="start"><br>
+    <label for="start_sensor">Start tid:</label>
+    <input type="date" id="start_sensor" name="start">
 
-                <label for="end_sensor">Slut tid:</label>
-                <input type="date" id="end_sensor" name="end"><br>
+    <label for="end_sensor">Slut tid:</label>
+    <input type="date" id="end_sensor" name="end">
 
-                <input type="submit" class="submit-btn" value="Se sensor-data">
-            </fieldset>
-        </form>
+    <input type="submit" value="Se sensor-data">
+  </form>
 
-<<<<<<< HEAD
-        <!-- Formular til lokale -->
-        <form action="/submit" method="get">
-            <fieldset>
-                <legend>Lokale data</legend>
-                <label for="lokale">Lokale:</label>
-                <input type="number" id="lokale" name="lokale"><br>
-=======
-    <!-- Formular til lokale -->
-    <form action="/" method="post">
-        <label for="lokale">Lokale:</label>
-        <input type="number" id="lokale" name="lokale">
->>>>>>> origin/main
+  <!-- Formular til lokale -->
+  <form action="/" method="post">
+    <label for="lokale">Lokale:</label>
+    <input type="number" id="lokale" name="lokale">
 
-                <label for="start_lokale">Start tid:</label>
-                <input type="date" id="start_lokale" name="start"><br>
+    <label for="start_lokale">Start tid:</label>
+    <input type="date" id="start_lokale" name="start">
 
-                <label for="end_lokale">Slut tid:</label>
-                <input type="date" id="end_lokale" name="end"><br>
+    <label for="end_lokale">Slut tid:</label>
+    <input type="date" id="end_lokale" name="end">
 
-                <input type="submit" class="submit-btn" value="Se lokale-data">
-            </fieldset>
-        </form>
+    <input type="submit" value="Se lokale-data">
+  </form>
 
-<<<<<<< HEAD
-        <!-- Formular til alt data -->
-        <form action="/submit" method="get">
-            <fieldset>
-                <legend>Alt data</legend>
-                <label for="start_all">Start tid:</label>
-                <input type="date" id="start_all" name="start"><br>
-=======
-    <!-- Formular til alt data -->
-    <form action="/" method="post">
-        <label for="start_all">Start tid:</label>
-        <input type="date" id="start_all" name="start">
->>>>>>> origin/main
+  <!-- Formular til alt data -->
+  <form action="/" method="post">
+    <label for="start_all">Start tid:</label>
+    <input type="date" id="start_all" name="start">
 
-                <label for="end_all">Slut tid:</label>
-                <input type="date" id="end_all" name="end"><br>
+    <label for="end_all">Slut tid:</label>
+    <input type="date" id="end_all" name="end">
 
-                <input type="hidden" name="all" value="1">
-                <input type="submit" class="submit-btn" value="Hent alt data">
-            </fieldset>
-        </form>
-
-        <!-- Nuværende Rankings -->
-        <div class="ranking-box">
-            <h2>Nuværende Rankings</h2>
-            <ol>
-                <li>Lokale 2349: cannot read because too loud</li>
-                <li>Lokale 2221: 501 decibel</li>
-                <li>Lokale 2151: 500 decibel</li>
-            </ol>
-        </div>
-    </div>
+    <input type="hidden" name="all" value="1"> <!-- markér at det er "alt data" -->
+    <input type="submit" value="Hent alt data">
+  </form>
 </body>
 </html>
