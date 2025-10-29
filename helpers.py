@@ -4,8 +4,9 @@ import plotly.graph_objects as go
 from plotly.io import to_html
 import pandas as pd
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
+gmt_plus1 = timezone(timedelta(hours=1))
 
 def query_db(query, args=()):
     conn = sqlite3.connect('larm.db')
@@ -21,13 +22,17 @@ def query_db(query, args=()):
 
 # returner html for plot
 # warning: kan se underlig ud hvis der er optaget i samme rum, men med forskellige lokationer på en gang
-def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
+def make_graf(query: list[dict], x: str, y: str, groupKey: str) -> str:
     fig = go.Figure()
     df = pd.DataFrame(query)
 
-    # ændre så at tid går fra timestamps til en rigtig dato
-    df["tid"] = df["tid"].map(lambda timestamp: datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z'))
+    if len(df)==0:
+        return "Vi har ikke data indenfor denne periode"
 
+    # ændre så at tid går fra timestamps til en rigtig dato
+    df["tid"] = df["tid"].map(
+        lambda ts: datetime.fromtimestamp(ts, tz=gmt_plus1).strftime('%Y-%m-%d %H:%M:%S')
+    )
     columns = list(df.columns)
     # fjerner kolonner som ikke skal være i ekstra info når man holder musen over et datapunkt
     for i in [x, y, groupKey]:
@@ -61,7 +66,9 @@ def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
 
     fig.update_layout(
         autosize=True,
-        margin = dict(l=20, r=20, t=40, b=20)
+        margin = dict(l=20, r=20, t=40, b=20),
+        xaxis_title = "Tid",
+        yaxis_title = "Lydstyrke (Db)",
     )
 
     return to_html(
