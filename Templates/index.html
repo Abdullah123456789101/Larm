@@ -1,213 +1,229 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="UTF-8">
-  <title>Søg i larm.db</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background: #f7f8fa;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      padding: 2rem;
-    }
+    <meta charset="UTF-8">
+    <title>Søg i larm.db</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background: #f7f8fa;
+            color: #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
 
-    h1 {
-      font-size: 2rem;
-      color: #333;
-    }
+        h1 {
+            font-size: 2rem;
+            color: #333;
+        }
 
-    form {
-      background: white;
-      padding: 1.5rem 2rem;
-      border-radius: 28px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      width: 320px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+        form {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 28px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 320px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
 
-    form:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    }
+        form:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
 
-    label {
-      font-weight: 500;
-      margin-top: 0.5rem;
-    }
+        label {
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
 
-    input[type="number"],
-    input[type="date"] {
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s ease;
-      width: 90%;
-      box-sizing: border-box;
-    }
+        input[type="number"],
+        input[type="date"] {
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+            width: 90%;
+            box-sizing: border-box;
+        }
 
-    input[type="number"]:focus,
-    input[type="date"]:focus {
-      border-color: #0078d7;
-    }
+        input[type="number"]:focus,
+        input[type="date"]:focus {
+            border-color: #0078d7;
+        }
 
-    input[type="submit"] {
-      margin-top: 1rem;
-      background: #0078d7;
-      color: white;
-      border: none;
-      border-radius: 18px;
-      padding: 0.7rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
+        input[type="submit"] {
+            margin-top: 1rem;
+            background: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            padding: 0.7rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
 
-    input[type="submit"]:hover {
-      background: #005fa3;
-    }
+        input[type="submit"]:hover {
+            background: #005fa3;
+        }
 
-    details {
-      background: #e5e5e5;
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
+        details {
+            background: #e5e5e5;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
 
-    details:hover {
-      background: #dcdcdc;
-    }
+        details:hover {
+            background: #dcdcdc;
+        }
 
-    summary {
-      font-weight: 600;
-      color: #333;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      user-select: none;
-    }
+        summary {
+            font-weight: 600;
+            color: #333;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+        }
 
-    summary::before {
-      content: "▶";
-      font-size: 0.9rem;
-      transition: transform 0.2s ease;
-    }
+        summary::before {
+            content: "▶";
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+        }
 
-    details[open] summary::before {
-      transform: rotate(90deg);
-    }
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
 
-    summary::-webkit-details-marker {
-      display: none;
-    }
+        summary::-webkit-details-marker {
+            display: none;
+        }
 
-    details[open] summary {
-      margin-bottom: 0.5rem;
-    }
+        details[open] summary {
+            margin-bottom: 0.5rem;
+        }
 
-    details > label,
-    details > input {
-      width: 90%;
-      margin-left: 0.8rem;
-    }
+        details > label,
+        details > input {
+            width: 90%;
+            margin-left: 0.8rem;
+        }
 
-    details > label {
-      margin-top: 0.4rem;
-      display: block;
-    }
+        details > label {
+            margin-top: 0.4rem;
+            display: block;
+        }
 
-    /* Enkel og rolig stil til indholdsfortegnelsen */
-    .toc {
-      background: #f0f2f5;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      width: 360px;
-      font-size: 0.95rem;
-    }
+        /* Enkel og rolig stil til indholdsfortegnelsen */
+        .toc {
+            background: #f0f2f5;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            width: 360px;
+            font-size: 0.95rem;
+        }
 
-    .toc h2 {
-      font-size: 1.1rem;
-      color: #005fa3;
-      margin-bottom: 0.5rem;
-    }
+        .toc h2 {
+            font-size: 1.1rem;
+            color: #005fa3;
+            margin-bottom: 0.5rem;
+        }
 
-    .toc ul {
-      list-style-type: disc;
-      margin: 0;
-      padding-left: 1.5rem;
-    }
+        .toc ul {
+            list-style-type: disc;
+            margin: 0;
+            padding-left: 1.5rem;
+        }
 
-    .toc li {
-      margin-bottom: 0.3rem;
-    }
-  </style>
+        .toc li {
+            margin-bottom: 0.3rem;
+        }
+    </style>
 </head>
 <body>
-  <h1>Søg data</h1>
+<h1>Søg data</h1>
 
-  <!-- Enkel indholdsfortegnelse -->
-  <div class="toc">
+<!-- Enkel indholdsfortegnelse -->
+<div class="toc">
     <h2>Indholdsfortegnelse</h2>
     <ul>
-      <li>Alt data</li>
-      <li>Lokale data</li>
-      <li>Sensor data</li>
+        <li>Alt data</li>
+        <li>Lokale data</li>
+        <li>Sensor data</li>
     </ul>
-  </div>
+</div>
 
-  <!-- Formularer -->
-  <h2>Alt data</h2>
-  <form action="/" method="post">
+<!-- Formularer -->
+<h2>Alt data</h2>
+<form action="/" method="post">
     <details>
-      <summary>Vælg tidsrum (valgfrit)</summary>
-      <label for="start_all">Start tid:</label>
-      <input type="date" id="start_all" name="start">
-      <label for="end_all">Slut tid:</label>
-      <input type="date" id="end_all" name="end">
+        <summary>Vælg tidsrum (valgfrit)</summary>
+        <label for="start_all">Start tid:</label>
+        <input type="date" id="start_all" name="start">
+        <label for="end_all">Slut tid:</label>
+        <input type="date" id="end_all" name="end">
     </details>
     <input type="hidden" name="all" value="1">
     <input type="submit" value="Hent alt data">
-  </form>
+</form>
 
-  <h2>Lokale data</h2>
-  <form action="/" method="post">
-    <label for="lokale">Lokale:</label>
-    <input type="number" id="lokale" name="lokale">
-    <details>
-      <summary>Vælg tidsrum (valgfrit)</summary>
-      <label for="start_lokale">Start tid:</label>
-      <input type="date" id="start_lokale" name="start">
-      <label for="end_lokale">Slut tid:</label>
-      <input type="date" id="end_lokale" name="end">
+<h2>Lokale data</h2>
+<form action="/" method="post">
+    <!--<label for="lokale">Lokale:</label>
+    <input type="number" id="lokale" name="lokale">-->
+
+    <details open>
+        <summary>Lokaler</summary>
+        {% for lokale in lokaler %}
+            <input type="submit" value="{{ lokale }}" name="lokale">
+        {% endfor %}
     </details>
-    <input type="submit" value="Se lokale-data">
-  </form>
 
-  <h2>Sensor data</h2>
-  <form action="/" method="post">
-    <label for="sensor">Sensor ID:</label>
-    <input type="number" id="sensor" name="sensor">
     <details>
-      <summary>Vælg tidsrum (valgfrit)</summary>
-      <label for="start_sensor">Start tid:</label>
-      <input type="date" id="start_sensor" name="start">
-      <label for="end_sensor">Slut tid:</label>
-      <input type="date" id="end_sensor" name="end">
+        <summary>Vælg tidsrum (valgfrit)</summary>
+        <label for="start_lokale">Start tid:</label>
+        <input type="date" id="start_lokale" name="start">
+        <label for="end_lokale">Slut tid:</label>
+        <input type="date" id="end_lokale" name="end">
     </details>
-    <input type="submit" value="Se sensor-data">
-  </form>
+    <!--<input type="submit" value="Se lokale-data">-->
+</form>
 
-  <p>Denne hjemmeside er skabt for at få et overblik over støjniveau. Skabt af Abdullah, Adam og Lukas.
-  <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Læs mere her.</a></p>
+<h2>Sensor data</h2>
+<form action="/" method="post">
+    <!--<label for="sensor">Sensor ID:</label>
+    <input type="number" id="sensor" name="sensor">-->
+
+    <details open>
+        <summary>Sensorer</summary>
+        {% for sensor in sensorer %}
+            <input type="submit" value="{{ sensor }}" name="lokale">
+        {% endfor %}
+    </details>
+
+    <details>
+        <summary>Vælg tidsrum (valgfrit)</summary>
+        <label for="start_sensor">Start tid:</label>
+        <input type="date" id="start_sensor" name="start">
+        <label for="end_sensor">Slut tid:</label>
+        <input type="date" id="end_sensor" name="end">
+    </details>
+    <!--<input type="submit" value="Se sensor-data">-->
+</form>
+
+<p>Denne hjemmeside er skabt for at få et overblik over støjniveau. Skabt af Abdullah, Adam og Lukas.
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Læs mere her.</a></p>
 </body>
 </html>

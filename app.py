@@ -11,7 +11,13 @@ app = Flask(__name__, template_folder="Templates")
 @app.route('/', methods=['GET', 'POST'])
 def root():
     if request.method == 'GET':
-        return render_template("index.html")
+        gyldige_lokaler = set([int(data["lokale"]) for data in query_db("SELECT lokale FROM data")])
+        gyldige_lokaler = sorted(gyldige_lokaler)
+
+        gyldige_sensorer = set([int(data["sensor_id"]) for data in query_db("SELECT * FROM data")])
+        gyldige_sensorer = sorted(gyldige_sensorer)
+
+        return render_template("index.html", lokaler=gyldige_lokaler, sensorer=gyldige_sensorer)
 
     lokale = request.form.get("lokale")
     sensor = request.form.get("sensor")
