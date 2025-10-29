@@ -22,7 +22,7 @@ def query_db(query, args=()):
 
 # returner html for plot
 # warning: kan se underlig ud hvis der er optaget i samme rum, men med forskellige lokationer på en gang
-def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
+def make_graf(query: list[dict], x: str, y: str, groupKey: str) -> str:
     fig = go.Figure()
     df = pd.DataFrame(query)
 
