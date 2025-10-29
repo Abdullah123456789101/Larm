@@ -23,7 +23,7 @@
     form {
       background: white;
       padding: 1.5rem 2rem;
-      border-radius: 28px; /* squircle-effekt */
+      border-radius: 28px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
@@ -50,6 +50,8 @@
       font-size: 1rem;
       outline: none;
       transition: border-color 0.2s ease;
+      width: 90%;
+      box-sizing: border-box;
     }
 
     input[type="number"]:focus,
@@ -72,49 +74,116 @@
     input[type="submit"]:hover {
       background: #005fa3;
     }
+
+    /* Dropdown styling */
+    details {
+      background: #e5e5e5;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    details:hover {
+      background: #dcdcdc;
+    }
+
+    summary {
+      font-weight: 600;
+      color: #333;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+
+    summary::before {
+      content: "▶";
+      font-size: 0.9rem;
+      transition: transform 0.2s ease;
+    }
+
+    details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details[open] summary {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Indholdet inde i dropdown skal være lidt smallere */
+    details > label,
+    details > input {
+      width: 90%;
+      margin-left: 0.8rem;
+    }
+
+    details > label {
+      margin-top: 0.4rem;
+      display: block;
+    }
   </style>
 </head>
 <body>
   <h1>Søg data</h1>
+  <p>Man behøves ikke at udfylde start og slut dato.
+  Når det ikke udfyldes, får man alt data fra den valgte indstilling</p>
 
-  <!-- Formular til sensor -->
+  <!-- Formular til alt data -->
+  <h2>Alt data</h2>
   <form action="/" method="post">
-    <label for="sensor">Sensor ID:</label>
-    <input type="number" id="sensor" name="sensor">
+    <details>
+      <summary>Vælg tidsrum (valgfrit)</summary>
+      <label for="start_all">Start tid:</label>
+      <input type="date" id="start_all" name="start">
 
-    <label for="start_sensor">Start tid:</label>
-    <input type="date" id="start_sensor" name="start">
+      <label for="end_all">Slut tid:</label>
+      <input type="date" id="end_all" name="end">
+    </details>
 
-    <label for="end_sensor">Slut tid:</label>
-    <input type="date" id="end_sensor" name="end">
-
-    <input type="submit" value="Se sensor-data">
+    <input type="hidden" name="all" value="1">
+    <input type="submit" value="Hent alt data">
   </form>
 
   <!-- Formular til lokale -->
+  <h2>Lokale data</h2>
   <form action="/" method="post">
     <label for="lokale">Lokale:</label>
     <input type="number" id="lokale" name="lokale">
 
-    <label for="start_lokale">Start tid:</label>
-    <input type="date" id="start_lokale" name="start">
+    <details>
+      <summary>Vælg tidsrum (valgfrit)</summary>
+      <label for="start_lokale">Start tid:</label>
+      <input type="date" id="start_lokale" name="start">
 
-    <label for="end_lokale">Slut tid:</label>
-    <input type="date" id="end_lokale" name="end">
+      <label for="end_lokale">Slut tid:</label>
+      <input type="date" id="end_lokale" name="end">
+    </details>
 
     <input type="submit" value="Se lokale-data">
   </form>
 
-  <!-- Formular til alt data -->
+  <!-- Formular til sensor -->
+  <h2>Sensor data</h2>
   <form action="/" method="post">
-    <label for="start_all">Start tid:</label>
-    <input type="date" id="start_all" name="start">
+    <label for="sensor">Sensor ID:</label>
+    <input type="number" id="sensor" name="sensor">
 
-    <label for="end_all">Slut tid:</label>
-    <input type="date" id="end_all" name="end">
+    <details>
+      <summary>Vælg tidsrum (valgfrit)</summary>
+      <label for="start_sensor">Start tid:</label>
+      <input type="date" id="start_sensor" name="start">
 
-    <input type="hidden" name="all" value="1"> <!-- markér at det er "alt data" -->
-    <input type="submit" value="Hent alt data">
+      <label for="end_sensor">Slut tid:</label>
+      <input type="date" id="end_sensor" name="end">
+    </details>
+
+    <input type="submit" value="Se sensor-data">
   </form>
 </body>
 </html>
