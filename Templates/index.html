@@ -75,7 +75,6 @@
       background: #005fa3;
     }
 
-    /* Dropdown styling */
     details {
       background: #e5e5e5;
       padding: 0.8rem 1rem;
@@ -116,7 +115,6 @@
       margin-bottom: 0.5rem;
     }
 
-    /* Indholdet inde i dropdown skal være lidt smallere */
     details > label,
     details > input {
       width: 90%;
@@ -127,63 +125,89 @@
       margin-top: 0.4rem;
       display: block;
     }
+
+    /* Enkel og rolig stil til indholdsfortegnelsen */
+    .toc {
+      background: #f0f2f5;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      width: 360px;
+      font-size: 0.95rem;
+    }
+
+    .toc h2 {
+      font-size: 1.1rem;
+      color: #005fa3;
+      margin-bottom: 0.5rem;
+    }
+
+    .toc ul {
+      list-style-type: disc;
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .toc li {
+      margin-bottom: 0.3rem;
+    }
   </style>
 </head>
 <body>
   <h1>Søg data</h1>
-  <p>Man behøves ikke at udfylde start og slut dato.
-  Når det ikke udfyldes, får man alt data fra den valgte indstilling</p>
 
-  <!-- Formular til alt data -->
+  <!-- Enkel indholdsfortegnelse -->
+  <div class="toc">
+    <h2>Indholdsfortegnelse</h2>
+    <ul>
+      <li>Alt data</li>
+      <li>Lokale data</li>
+      <li>Sensor data</li>
+    </ul>
+  </div>
+
+  <!-- Formularer -->
   <h2>Alt data</h2>
   <form action="/" method="post">
     <details>
       <summary>Vælg tidsrum (valgfrit)</summary>
       <label for="start_all">Start tid:</label>
       <input type="date" id="start_all" name="start">
-
       <label for="end_all">Slut tid:</label>
       <input type="date" id="end_all" name="end">
     </details>
-
     <input type="hidden" name="all" value="1">
     <input type="submit" value="Hent alt data">
   </form>
 
-  <!-- Formular til lokale -->
   <h2>Lokale data</h2>
   <form action="/" method="post">
     <label for="lokale">Lokale:</label>
     <input type="number" id="lokale" name="lokale">
-
     <details>
       <summary>Vælg tidsrum (valgfrit)</summary>
       <label for="start_lokale">Start tid:</label>
       <input type="date" id="start_lokale" name="start">
-
       <label for="end_lokale">Slut tid:</label>
       <input type="date" id="end_lokale" name="end">
     </details>
-
     <input type="submit" value="Se lokale-data">
   </form>
 
-  <!-- Formular til sensor -->
   <h2>Sensor data</h2>
   <form action="/" method="post">
     <label for="sensor">Sensor ID:</label>
     <input type="number" id="sensor" name="sensor">
-
     <details>
       <summary>Vælg tidsrum (valgfrit)</summary>
       <label for="start_sensor">Start tid:</label>
       <input type="date" id="start_sensor" name="start">
-
       <label for="end_sensor">Slut tid:</label>
       <input type="date" id="end_sensor" name="end">
     </details>
-
     <input type="submit" value="Se sensor-data">
   </form>
+
+  <p>Denne hjemmeside er skabt for at få et overblik over støjniveau. Skabt af Abdullah, Adam og Lukas.
+  <a href="https://www.example.com/">Læs mere her.</a></p>
 </body>
 </html>
