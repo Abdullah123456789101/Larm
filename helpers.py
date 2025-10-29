@@ -25,6 +25,9 @@ def make_graf(query: [dict], x: str, y: str, groupKey: str) -> str:
     fig = go.Figure()
     df = pd.DataFrame(query)
 
+    if len(df)==0:
+        return "Vi har ikke data indenfor denne periode"
+
     # ændre så at tid går fra timestamps til en rigtig dato
     df["tid"] = df["tid"].map(lambda timestamp: datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z'))
 
