@@ -15,7 +15,7 @@ def root():
         gyldige_sensorer = set([int(data["sensor_id"]) for data in query_db("SELECT * FROM data")])
         gyldige_sensorer = sorted(gyldige_sensorer)
 
-        return render_template("indexx.html", lokaler=gyldige_lokaler, sensorer=gyldige_sensorer)
+        return render_template("index.html", lokaler=gyldige_lokaler, sensorer=gyldige_sensorer)
 
     lokale = request.form.get("lokale")
     sensor = request.form.get("sensor")
