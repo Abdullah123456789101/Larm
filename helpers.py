@@ -62,6 +62,7 @@ def make_graf(query: list[dict], x: str, y: str, groupKey: str) -> str:
             visible=True,
             hoverinfo="x+y+text",
             text=item_texts,
+            mode='lines+markers'
         ))
 
     fig.update_layout(
