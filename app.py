@@ -1,10 +1,8 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 import sqlite3
-
 from datetime import datetime
 
 from helpers import query_db, make_graf
-
 
 app = Flask(__name__, template_folder="Templates")
 
@@ -17,7 +15,7 @@ def root():
         gyldige_sensorer = set([int(data["sensor_id"]) for data in query_db("SELECT * FROM data")])
         gyldige_sensorer = sorted(gyldige_sensorer)
 
-        return render_template("index.html", lokaler=gyldige_lokaler, sensorer=gyldige_sensorer)
+        return render_template("indexx.html", lokaler=gyldige_lokaler, sensorer=gyldige_sensorer)
 
     lokale = request.form.get("lokale")
     sensor = request.form.get("sensor")
@@ -25,7 +23,6 @@ def root():
     start = request.form.get("start")
     end = request.form.get("end")
 
-    # Konverter dato fra yyyy-mm-dd til unix timestamp, hvis start og end er sat
     start_ts = int(datetime.strptime(start, "%Y-%m-%d").timestamp()) if start else None
     end_ts = int(datetime.strptime(end, "%Y-%m-%d").timestamp()) if end else None
 
@@ -47,10 +44,10 @@ def root():
         else:
             return redirect(url_for("get_data"))
 
-    # fallback
     return redirect(url_for("root"))
 
 
+# --- Eksisterende routes til data, lokale, sensor osv. ---
 @app.route('/data', methods=['GET'])
 def get_data():
     query = query_db("SELECT * FROM data")
@@ -77,7 +74,7 @@ def get_lokale_date(lokale, start, end):
 
 @app.route('/sensor/<int:sensor_id>', methods=['GET'])
 def get_sensor(sensor_id):
-    query = query_db("SELECT * FROM data WHERE sensor_id = ?", (sensor_id, ))
+    query = query_db("SELECT * FROM data WHERE sensor_id = ?", (sensor_id,))
     graf_html = make_graf(query, "tid", "db", "lokale")
     return render_template("graf.html", graf=graf_html)
 
@@ -89,10 +86,8 @@ def get_sensor_date(sensor_id, start, end):
 
 @app.route('/sensor_info/<int:sensor_id>', methods=['GET'])
 def get_sensor_info(sensor_id):
-    return jsonify(query_db("SELECT * FROM sensor WHERE id = ?", (sensor_id, )))
+    return jsonify(query_db("SELECT * FROM sensor WHERE id = ?", (sensor_id,)))
 
-# teste uploading af data:
-# Invoke-RestMethod -Uri "http://127.0.0.1:8080/add" -Method Post ` -ContentType "application/json" ` -Body '{ "db": 90, "sensor_id": 67 }'
 @app.route('/add', methods=['POST'])
 def add_data():
     data = request.get_json()
@@ -102,7 +97,7 @@ def add_data():
     conn = sqlite3.connect('larm.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT lokale, lokation FROM sensor WHERE id = ?", (sensor_id, ))
+    cursor.execute("SELECT lokale, lokation FROM sensor WHERE id = ?", (sensor_id,))
     lokale, lokation = cursor.fetchone()
 
     tid = int(datetime.now().timestamp())
@@ -114,8 +109,6 @@ def add_data():
 
     return jsonify({'message': 'Data added successfully'})
 
-# teste opdatere sensor
-# Invoke-RestMethod -Uri "http://127.0.0.1:8080/update_sensor" -Method Put ` -ContentType "application/json" ` -Body '{ "sensor_id": 67, "lokale": "2221", "lokation": "vindue" }'
 @app.route('/update_sensor', methods=['PUT'])
 def update_sensor():
     data = request.get_json()
@@ -132,9 +125,33 @@ def update_sensor():
 
     cursor.execute('UPDATE sensor SET lokale = ?, lokation = ? WHERE id = ?', (lokale, lokation, sensor_id))
     conn.commit()
-
     conn.close()
     return jsonify({'message': 'Sensor updated successfully'})
+
+
+# --- NY ROUTE: Top støjende sensorer baseret på seneste måling ---
+@app.route('/rankings', methods=['GET'])
+def rankings():
+    conn = sqlite3.connect('larm.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    # Hent seneste måling for hver sensor
+    cursor.execute("""
+        SELECT sensor_id, lokale, db
+        FROM data d1
+        WHERE tid = (
+            SELECT MAX(tid) 
+            FROM data d2 
+            WHERE d2.sensor_id = d1.sensor_id
+        )
+        ORDER BY db DESC
+        LIMIT 10
+    """)
+
+    results = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(results)
 
 
 if __name__ == '__main__':

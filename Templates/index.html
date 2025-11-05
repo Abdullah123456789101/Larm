@@ -126,7 +126,7 @@
             display: block;
         }
 
-        /* Enkel og rolig stil til indholdsfortegnelsen */
+        /* Indholdsfortegnelse */
         .toc {
             background: #f0f2f5;
             padding: 1rem 1.5rem;
@@ -147,15 +147,31 @@
             padding-left: 1.5rem;
         }
 
-        .toc li {
-            margin-bottom: 0.3rem;
+        .rankings {
+            background: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            width: 360px;
         }
+
+        .rankings h2 {
+            margin-top: 0;
+            color: #005fa3;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rankings ul {
+            padding-left: 1.2rem;
+        }
+
     </style>
 </head>
 <body>
 <h1>Søg data</h1>
 
-<!-- Enkel indholdsfortegnelse -->
+<!-- Guide -->
 <div class="toc">
     <h2>Guide til hjemmesiden</h2>
     <ul>
@@ -185,9 +201,6 @@
 
 <h2>Lokale data</h2>
 <form action="/" method="post">
-    <!--<label for="lokale">Lokale:</label>
-    <input type="number" id="lokale" name="lokale">-->
-
     <details open>
         <summary>Lokaler</summary>
         {% for lokale in lokaler %}
@@ -202,14 +215,10 @@
         <label for="end_lokale">Slut tid:</label>
         <input type="date" id="end_lokale" name="end">
     </details>
-    <!--<input type="submit" value="Se lokale-data">-->
 </form>
 
 <h2>Sensor data</h2>
 <form action="/" method="post">
-    <!--<label for="sensor">Sensor ID:</label>
-    <input type="number" id="sensor" name="sensor">-->
-
     <details open>
         <summary>Sensorer</summary>
         {% for sensor in sensorer %}
@@ -224,10 +233,47 @@
         <label for="end_sensor">Slut tid:</label>
         <input type="date" id="end_sensor" name="end">
     </details>
-    <!--<input type="submit" value="Se sensor-data">-->
 </form>
+
+<!-- Ranking-boks -->
+<div class="rankings">
+    <h2>Top støjende sensorer (seneste måling)</h2>
+    <ul id="ranking-list">
+        <li>Henter data...</li>
+    </ul>
+</div>
 
 <p>Skabt med kærlighed for høresansen af Abdullah, Adam og Lukas.
     <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Læs mere her.</a></p>
+
+<script>
+async function fetchRankings() {
+    try {
+        const response = await fetch('/rankings');
+        const data = await response.json();
+        const list = document.getElementById('ranking-list');
+        list.innerHTML = ''; // Clear previous list
+
+        if(data.length === 0){
+            const li = document.createElement('li');
+            li.textContent = 'Ingen data tilgængelig';
+            list.appendChild(li);
+            return;
+        }
+
+        data.forEach((item) => {
+            const li = document.createElement('li');
+            li.textContent = `Sensor ${item.sensor_id} - Lokale ${item.lokale}: ${item.db} dB`;
+            list.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Fejl ved hentning af rankings:', error);
+    }
+}
+
+// Hent rankings første gang og hver 10. sekund
+fetchRankings();
+setInterval(fetchRankings, 10000);
+</script>
 </body>
 </html>
